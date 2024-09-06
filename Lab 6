@@ -1,0 +1,159 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+
+//pines potenciometros
+#define pot1 36
+#define pot2 39
+
+//Crear objeto LCD
+LiquidCrystal_I2C LCD (0x27, 16, 2);
+
+//variables decenas, unidades, decimal
+uint8_t decenas1, decenas2, unidades1, unidades2, decimal1, decimal2;
+
+//variable contador
+volatile uint8_t contador;
+
+//variables lectura potenciometros
+float valorPot1, valorPot2;
+
+//interrupcion boton incrementar
+struct Boton1
+{
+  const uint8_t botInc;
+  bool pressed;
+  bool lastState;
+};
+Boton1 incrementar = {32, false, false};
+
+// Interrupción boton decrementar
+struct Boton2
+{
+  const uint8_t botDec;
+  bool pressed;
+  bool lastState;
+};
+Boton2 decrementar = {33, false, false};
+
+//variable handle interrupcion incrementar
+void IRAM_ATTR handle_inc(){
+  portENTER_CRITICAL_ISR(&mux);
+  incrementar.pressed = true;
+  portEXIT_CRITICAL_ISR(&mux);
+}
+
+//variable handle interrupcion decrementar
+void IRAM_ATTR handle_dec(){
+  portENTER_CRITICAL_ISR(&mux);
+  decrementar.pressed = true;
+  portEXIT_CRITICAL_ISR(&mux);
+}
+
+void setup() {
+  //comienza serial
+  Serial.begin(115200);
+  //Inicia LED
+  LCD.init();
+  LCD.backlight();
+
+  LCD.setCursor(0,0);
+  LCD.print("Hola Chofo");
+
+  // entrada boton incrementar
+  pinMode(incrementar.botInc, INPUT_PULLUP);
+  attachInterrupt(incrementar.botInc, handle_inc, RISING);
+
+  //entrada boton decrementar
+  pinMode(decrementar.botDec, INPUT_PULLUP);
+  attachInterrupt(decrementar.botDec, handle_dec, RISING);
+
+  delay(3000);
+}
+
+void loop() {
+  //funcion contador
+  if (incrementar.pressed != incrementar.lastState)
+  {
+    if (incrementar.pressed)
+    {
+      if(contador > 255){
+        contador = 0;
+      }
+      contador++;
+      incrementar.pressed = false;
+    }
+    incrementar.lastState = incrementar.pressed;
+  }
+
+if(decrementar.pressed != decrementar.lastState)
+  {
+    if (decrementar.pressed)
+    {
+      contador--;
+      decrementar.pressed = false;
+    }
+    decrementar.lastState = decrementar.pressed;
+  }
+
+  //extraccion digitos de contador
+  //primer numero
+  int primer_D = (contador / 100) % 10;
+  // segundo numero
+  int segundo_D = (contador / 10) % 10;
+  // tercer numero
+  int tercer_D = (contador) % 10;
+
+  //lectura potenciometro 1
+  valorPot1 = analogReadMilliVolts(pot1)/10.0;
+  int valor1 = valorPot1;
+  decenas1 = valor1/100.0;
+  valor1 = valor1 - decenas1 *100.0;
+  unidades1 = valor1 / 10.0;
+  valor1 = valor1 - unidades1 * 10.0;
+  decimal1 = valor1;
+
+  //lectura potenciometro
+  valorPot2 = analogReadMilliVolts(pot2)/10.0;
+  int valor2 = valorPot2;
+  decenas2 = valor2/100.0;
+  valor2 = valor2 - decenas2 *100.0;
+  unidades2 = valor2 / 10.0;
+  valor2 = valor2 - unidades2 * 10.0;
+  decimal2 = valor2;
+
+  LCD.clear();
+
+  //valor pot 1
+  LCD.setCursor(0,0);
+  LCD.print("Pot1:");
+  LCD.setCursor(0,1);
+  LCD.print(decenas1);
+  LCD.print(".");
+  LCD.print(unidades1);
+  LCD.print(decimal1);
+  LCD.print("V");
+
+  //valor pot 2
+  LCD.setCursor(6, 0);
+  LCD.print("Pot2:");
+  LCD.setCursor(6, 1);
+  LCD.print(decenas2);
+  LCD.print('.');
+  LCD.print(unidades2);
+  LCD.print(decimal2);
+  LCD.print("V");
+
+  //CPU
+  LCD.setCursor(12, 0);
+  LCD.print("CPU:");
+  LCD.setCursor(12, 1);
+  LCD.print(primer_D);
+  LCD.print(segundo_D);
+  LCD.print(tercer_D);
+
+  delay(100);
+  
+}
