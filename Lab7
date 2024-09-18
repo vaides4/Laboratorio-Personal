@@ -52,7 +52,8 @@ void loop() {
   }
 
   //Condiciones de menu
-  if(Serial.available() > 0){
+  if(Serial.available() > 0)
+  {
     //leer valor ingresado de menu por el usuario
     menu = Serial.parseInt();
 
@@ -71,14 +72,14 @@ void loop() {
       if(led == 1 || led == 2 || led == 3){
         encenderLed(led,tiempo);
       }
-      if(led > 3){
+      if(led > 3 && led < 1){
         printf("Valor incorrecto \n");
       }
       bandera = 0;
     }
     
     //condicion valor incorrecto
-    if(menu > 2){
+    if(menu > 2 && menu < 1){
       printf("Valor incorrecto \n");
       bandera = 0;
     }
