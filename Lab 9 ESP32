@@ -9,13 +9,14 @@ int valorPot1, valorPot2;
 int mapPot1, mapPot2;
 
 void setup() {
-  Serial1.begin(115200);
+  //Serial1.begin(115200);
+  Serial.begin(115200);
 }
 
 void loop() {
   //lectura de potenciometros
-  valorPot1 = analogReadMilliVolts(pot1)/10.0;
-  valorPot2 = analogReadMilliVolts(pot2)/10.0;
+  valorPot1 = analogRead(pot1);
+  valorPot2 = analogRead(pot2);
 
   //mapeo potenciometros
   mapPot1 = map(valorPot1, 0, 4095, 0, 15);
@@ -25,4 +26,6 @@ void loop() {
   Serial1.print(mapPot1);
   Serial1.print(" , ");
   Serial1.println(mapPot2);
+
+  //Serial.printf("Valor: %u \n", mapPot2);
 }
