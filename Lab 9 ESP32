@@ -10,7 +10,8 @@ int mapPot1, mapPot2;
 
 void setup() {
   //Serial1.begin(115200);
-  Serial.begin(115200);
+  //Serial.begin(115200);
+  Serial1.begin(115200, SERIAL_8N1, 17, 16);
 }
 
 void loop() {
@@ -23,9 +24,9 @@ void loop() {
   mapPot2 = map(valorPot2, 0, 4095, 0, 15);
 
   //UART1
-  Serial1.print(mapPot1);
-  Serial1.print(" , ");
-  Serial1.println(mapPot2);
+  Serial1.write(mapPot1);
+  Serial1.write(mapPot2);
 
   //Serial.printf("Valor: %u \n", mapPot2);
+  delay(500);
 }
