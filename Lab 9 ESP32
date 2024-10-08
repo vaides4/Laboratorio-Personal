@@ -6,6 +6,7 @@
 
 //variables donde se guardaran los valores de los poten
 int valorPot1, valorPot2;
+int mapPot1, mapPot2;
 
 void setup() {
   Serial1.begin(115200);
@@ -15,7 +16,13 @@ void loop() {
   //lectura de potenciometros
   valorPot1 = analogReadMilliVolts(pot1)/10.0;
   valorPot2 = analogReadMilliVolts(pot2)/10.0;
-  Serial1.print(valorPot1);
+
+  //mapeo potenciometros
+  mapPot1 = map(valorPot1, 0, 4095, 0, 15);
+  mapPot2 = map(valorPot2, 0, 4095, 0, 15);
+
+  //UART1
+  Serial1.print(mapPot1);
   Serial1.print(" , ");
-  Serial1.println(valorPot2);
+  Serial1.println(mapPot2);
 }
