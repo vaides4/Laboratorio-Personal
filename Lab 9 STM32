@@ -231,7 +231,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, f_Pin|a_Pin|d1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, g_Pin|b_Pin|d2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, g_Pin|e_Pin|d_Pin|b_Pin
+                          |d2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(c_GPIO_Port, c_Pin, GPIO_PIN_RESET);
@@ -249,8 +250,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : g_Pin b_Pin d2_Pin */
-  GPIO_InitStruct.Pin = g_Pin|b_Pin|d2_Pin;
+  /*Configure GPIO pins : g_Pin e_Pin d_Pin b_Pin
+                           d2_Pin */
+  GPIO_InitStruct.Pin = g_Pin|e_Pin|d_Pin|b_Pin
+                          |d2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -262,12 +265,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(c_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : e_Pin d_Pin */
-  GPIO_InitStruct.Pin = e_Pin|d_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
@@ -284,7 +281,6 @@ static void MX_GPIO_Init(void)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	if(HAL_GPIO_ReadPin(Boton1_GPIO_Port, Boton1_Pin) == 0){
 		bot1 = 1;
-
 	}
 	if(HAL_GPIO_ReadPin(Boton2_GPIO_Port, Boton2_Pin) == 0){
 		bot2 = 1;
@@ -340,11 +336,11 @@ void mostrarDigito(int numero){
 			 break;
 		case 5:
 			 HAL_GPIO_WritePin(a_GPIO_Port, a_Pin, 1);
-			 HAL_GPIO_WritePin(b_GPIO_Port, b_Pin, 1);
+			 HAL_GPIO_WritePin(b_GPIO_Port, b_Pin, 0);
 			 HAL_GPIO_WritePin(c_GPIO_Port, c_Pin, 1);
-			 HAL_GPIO_WritePin(d_GPIO_Port, d_Pin, 0);
+			 HAL_GPIO_WritePin(d_GPIO_Port, d_Pin, 1);
 			 HAL_GPIO_WritePin(e_GPIO_Port, e_Pin, 0);
-			 HAL_GPIO_WritePin(f_GPIO_Port, f_Pin, 0);
+			 HAL_GPIO_WritePin(f_GPIO_Port, f_Pin, 1);
 			 HAL_GPIO_WritePin(g_GPIO_Port, g_Pin, 1);
 			 break;
 		case 6:
