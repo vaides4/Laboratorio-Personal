@@ -47,7 +47,7 @@ uint8_t bot1 = 0;
 uint8_t bot2 = 0;
 uint8_t lecturaPot1 = 0;
 uint8_t lecturaPot2 = 0;
-uint8_t buffer[5];
+uint8_t buffer[2];
 
 /* USER CODE END PV */
 
@@ -103,15 +103,15 @@ int main(void)
   while (1)
   {
 	 if(bot1 == 1){
-		 bot1 = 0;
-		 HAL_UART_Receive(&huart1, buffer, sizeof(buffer), 100);
-		 lecturaPot1 = buffer[0];
+	     bot1 = 0;
+	     HAL_UART_Receive(&huart1, buffer, 2, 100); // Solo 2 bytes
+	     lecturaPot1 = buffer[0];
 	 }
 
 	 if(bot2 == 1){
 		 bot2 = 0;
-		 HAL_UART_Receive(&huart1, buffer, sizeof(buffer), 100);
-		 lecturaPot2 = buffer[2] + buffer[3];
+	     HAL_UART_Receive(&huart1, buffer, 2, 100);
+	     lecturaPot2 = buffer[1];
 	 }
 
 	 HAL_GPIO_WritePin(d1_GPIO_Port, d1_Pin, 1);
@@ -198,7 +198,7 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.Mode = UART_MODE_RX;
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart1) != HAL_OK)
