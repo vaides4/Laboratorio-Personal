@@ -104,7 +104,7 @@ int main(void)
   {
 	 if(bot1 == 1){
 	     bot1 = 0;
-	     HAL_UART_Receive(&huart1, buffer, 2, 100); // Solo 2 bytes
+	     HAL_UART_Receive(&huart1, buffer, 1, 100); // Solo 2 bytes
 	     lecturaPot1 = buffer[0];
 	 }
 
