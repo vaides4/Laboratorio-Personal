@@ -1,0 +1,22 @@
+#include <Arduino.h>
+
+//potenciometros
+#define pot1 36
+
+//variables de potenciometro
+int valorPot1, mapPot1;
+
+void setup() {
+    //comienza UART2
+    Serial2.begin(115200);
+}
+
+void loop() {
+    //lectura potenciometro
+    valorPot1 = analogRead(pot1);
+
+    //UART1
+    Serial2.write(mapPot1);
+
+    delay(500);
+}
