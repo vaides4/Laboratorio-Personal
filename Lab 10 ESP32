@@ -8,15 +8,17 @@ int valorPot1, mapPot1;
 
 void setup() {
     //comienza UART2
+   // Serial.begin(115200);
     Serial2.begin(115200);
 }
 
 void loop() {
     //lectura potenciometro
     valorPot1 = analogRead(pot1);
-
+    mapPot1 = map(valorPot1, 0, 4095, 0, 15);
     //UART1
     Serial2.write(mapPot1);
 
+    //Serial.printf("Valor: %u \n", mapPot1);
     delay(500);
 }
